@@ -1,22 +1,24 @@
 const express = require("express");
 const consola = require("consola");
 const dotenv = require("dotenv");
+const { v4: uuid } = require('uuid');
 const { Client, Config, CheckoutAPI } = require("@adyen/api-library");
 const { Nuxt, Builder } = require("nuxt");
+
+// init app
 const app = express();
-
-// Import and set Nuxt.js options
-const nuxtConfig = require("../nuxt.config.js");
-nuxtConfig.dev = process.env.NODE_ENV !== "production";
-
 // Parse JSON bodies
 app.use(express.json());
 // Parse URL-encoded bodies
 app.use(express.urlencoded({ extended: true }));
 
+// Import and set Nuxt.js options
+const nuxtConfig = require("../nuxt.config.js");
+nuxtConfig.dev = process.env.NODE_ENV !== "production";
+
 // Enables environment variables by parsing the .env file and assigning it to process.env
 dotenv.config({
-  path: "./.env"
+  path: "./.env",
 });
 
 // Adyen Node.js API library boilerplate (configuration, etc.)
@@ -30,45 +32,52 @@ const checkout = new CheckoutAPI(client);
 // This is more secure than a cookie. In a real application, this should be in a database.
 const paymentDataStore = {};
 
-app.get("/api/getPaymentMethods", (req, res) => {
-  checkout
-    .paymentMethods({
+/* ################# API ENDPOINTS ###################### */
+
+// Get payment methods
+app.post("/api/getPaymentMethods", async (req, res) => {
+  try {
+    const response = await checkout.paymentMethods({
       channel: "Web",
-      merchantAccount: process.env.MERCHANT_ACCOUNT
-    })
-    .then(response => {
-      res.json({
-        clientKey: process.env.CLIENT_KEY,
-        response: JSON.stringify(response)
-      });
-    })
-    .catch(error => {
-      console.log(error);
+      merchantAccount: process.env.MERCHANT_ACCOUNT,
     });
+    res.json({ response, clientKey: process.env.CLIENT_KEY });
+  } catch (err) {
+    console.error(`Error: ${err.message}, error code: ${err.errorCode}`);
+    res.status(err.statusCode).json(err.message);
+  }
 });
 
-app.post("/api/initiatePayment", (req, res) => {
+// Submitting a payment
+app.post("/api/initiatePayment", async (req, res) => {
   const currency = findCurrency(req.body.paymentMethod.type);
+  // find shopper IP from request
+  const shopperIP =
+    req.headers["x-forwarded-for"] || req.connection.remoteAddress;
 
-  checkout
-    .payments({
-      amount: { currency, value: 1000 },
-      reference: "12345",
+  try {
+    // unique ref for the transaction
+    const orderRef = uuid();
+    // Ideally the data passed here should be computed based on business logic
+    const response = await checkout.payments({
+      amount: { currency, value: 1000 }, // value is 10€ in minor units
+      reference: orderRef,
       merchantAccount: process.env.MERCHANT_ACCOUNT,
-      shopperIP: "192.168.1.3",
+      shopperIP,
       channel: "Web",
       additionalData: {
-        allow3DS2: true
+        allow3DS2: true,
       },
-      returnUrl: "http://localhost:8080/api/handleShopperRedirect",
-      // riskData: req.body.riskData,
+      // we pass the orderRef in return URL to get paymentData during redirects
+      returnUrl: `http://localhost:8080/api/handleShopperRedirect?orderRef=${orderRef}`,
       browserInfo: req.body.browserInfo,
+      // special handling for boleto
       paymentMethod: req.body.paymentMethod.type.includes("boleto")
         ? {
-            type: "boletobancario_santander"
+            type: "boletobancario_santander",
           }
         : req.body.paymentMethod,
-      // Required for Boleto:
+      // Below fields are required for Boleto:
       socialSecurityNumber: req.body.socialSecurityNumber,
       shopperName: req.body.shopperName,
       billingAddress:
@@ -79,7 +88,7 @@ app.post("/api/initiatePayment", (req, res) => {
       deliveryDate: "2023-12-31T23:00:00.000Z",
       shopperStatement:
         "Aceitar o pagamento até 15 dias após o vencimento.Não cobrar juros. Não aceitar o pagamento com cheque",
-      // Required for Klarna:
+      // Below fields are required for Klarna:
       countryCode: req.body.paymentMethod.type.includes("klarna") ? "DE" : null,
       shopperReference: "12345",
       shopperEmail: "youremail@email.com",
@@ -92,7 +101,7 @@ app.post("/api/initiatePayment", (req, res) => {
           description: "Shoes",
           id: "Item 1",
           taxAmount: "69",
-          amountIncludingTax: "400"
+          amountIncludingTax: "400",
         },
         {
           quantity: "2",
@@ -101,92 +110,110 @@ app.post("/api/initiatePayment", (req, res) => {
           description: "Socks",
           id: "Item 2",
           taxAmount: "52",
-          amountIncludingTax: "300"
-        }
-      ]
-    })
-    .then(response => {
-      let paymentMethodType = req.body.paymentMethod.type;
-      let resultCode = response.resultCode;
-      let redirectUrl =
-        response.redirect !== undefined ? response.redirect.url : null;
-      let action = null;
-      if (response.action) {
-        action = response.action;
-        paymentDataStore["paymentData"] = action.paymentData;
-      }
-      res.json({ paymentMethodType, resultCode, redirectUrl, action });
-    })
-    .catch(error => {
-      console.log(error);
+          amountIncludingTax: "300",
+        },
+      ],
     });
+
+    const { action } = response;
+
+    if (action) {
+      paymentDataStore[orderRef] = action.paymentData;
+    }
+    res.json(response);
+  } catch (err) {
+    console.error(`Error: ${err.message}, error code: ${err.errorCode}`);
+    res.status(err.statusCode).json(err.message);
+  }
 });
 
-app.all("/api/handleShopperRedirect", (req, res) => {
-  let payload = {};
-  payload["details"] = req.method === "GET" ? req.query : req.body;
-  payload["paymentData"] = paymentDataStore["paymentData"];
+app.post("/api/submitAdditionalDetails", async (req, res) => {
+  // Create the payload for submitting payment details
+  const payload = {
+    details: req.body.details,
+    paymentData: req.body.paymentData,
+  };
 
-  checkout.paymentsDetails(payload).then(response => {
-    delete paymentDataStore["paymentData"];
+  try {
+    // Return the response back to client
+    // (for further action handling or presenting result to shopper)
+    const response = await checkout.paymentsDetails(payload);
+
+    res.json(response);
+  } catch (err) {
+    console.error(`Error: ${err.message}, error code: ${err.errorCode}`);
+    res.status(err.statusCode).json(err.message);
+  }
+});
+
+// Handle all redirects from payment type
+app.all("/api/handleShopperRedirect", async (req, res) => {
+  // Create the payload for submitting payment details
+  const orderRef = req.query.orderRef;
+  const redirect = req.method === "GET" ? req.query : req.body;
+  const details = {};
+  if (redirect.payload) {
+    details.payload = redirect.payload;
+  } else if (redirect.redirectResult) {
+    details.redirectResult = redirect.redirectResult;
+  } else {
+    details.MD = redirect.MD;
+    details.PaRes = redirect.PaRes;
+  }
+
+  const payload = {
+    details,
+    paymentData: paymentDataStore[orderRef],
+  };
+
+  try {
+    const response = await checkout.paymentsDetails(payload);
+    // Conditionally handle different result codes for the shopper
     switch (response.resultCode) {
       case "Authorised":
-        res.redirect("/success");
+        res.redirect("/result/success");
         break;
       case "Pending":
-        res.redirect("/pending");
+      case "Received":
+        res.redirect("/result/pending");
         break;
       case "Refused":
-        res.redirect("/failed");
+        res.redirect("/result/failed");
         break;
       default:
-        res.redirect("/error");
+        res.redirect("/result/error");
         break;
     }
-  });
+  } catch (err) {
+    console.error(`Error: ${err.message}, error code: ${err.errorCode}`);
+    res.redirect("/result/error");
+  }
 });
 
-app.post("/api/submitAdditionalDetails", (req, res) => {
-  let payload = {};
-  payload["details"] = req.body.details;
-  payload["paymentData"] = req.body.paymentData;
+/* ################# end API ENDPOINTS ###################### */
 
-  checkout.paymentsDetails(payload).then(response => {
-    let resultCode = response.resultCode;
-    let action = response.action || null;
-
-    res.json({ action, resultCode });
-  });
-});
+/* ################# UTILS ###################### */
 
 function findCurrency(type) {
   switch (type) {
     case "ach":
       return "USD";
-    case "ideal":
-    case "giropay":
-    case "klarna_paynow":
-    case "sepadirectdebit":
-    case "directEbanking":
-      return "EUR";
-      break;
     case "wechatpayqr":
     case "alipay":
       return "CNY";
-      break;
     case "dotpay":
       return "PLN";
-      break;
     case "boletobancario":
     case "boletobancario_santander":
       return "BRL";
-      break;
     default:
       return "EUR";
-      break;
   }
 }
 
+/* ################# end UTILS ###################### */
+
+// Setup and start Nuxt.js
 async function start() {
   const nuxt = new Nuxt(nuxtConfig);
 
@@ -203,7 +230,7 @@ async function start() {
   app.listen(port, host);
   consola.ready({
     message: `Server listening on http://${host}:${port}`,
-    badge: true
+    badge: true,
   });
 }
 start();

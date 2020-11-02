@@ -1,8 +1,9 @@
 require("dotenv").config();
 
 module.exports = {
+  telemetry: false,
   server: {
-    port: 8080
+    port: 8080,
   },
   mode: "universal",
   /*
@@ -16,30 +17,18 @@ module.exports = {
       {
         hid: "description",
         name: "description",
-        content: process.env.npm_package_description || ""
-      }
-    ],
-    script: [
-      {
-        src:
-          "https://checkoutshopper-test.adyen.com/checkoutshopper/sdk/3.10.1/adyen.js"
-      }
-    ],
-    link: [
-      { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
-      {
-        rel: "stylesheet",
-        type: "text/css",
-        href:
-          "https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        content: process.env.npm_package_description || "",
       },
+    ],
+    script: [],
+    link: [
       {
         rel: "stylesheet",
         type: "text/css",
         href:
-          "https://checkoutshopper-test.adyen.com/checkoutshopper/sdk/3.10.1/adyen.css"
-      }
-    ]
+          "https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css",
+      },
+    ],
   },
   /*
    ** Customize the progress-bar color
@@ -52,7 +41,7 @@ module.exports = {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: [],
+  plugins: [{ src: "~/plugins/adyen-web", mode: "client" }],
   /*
    ** Nuxt.js dev-modules
    */
@@ -68,6 +57,6 @@ module.exports = {
     /*
      ** You can extend webpack config here
      */
-    extend(config, ctx) {}
-  }
+    extend(config, ctx) {},
+  },
 };
