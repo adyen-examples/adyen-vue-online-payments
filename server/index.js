@@ -1,7 +1,7 @@
 const express = require("express");
 const consola = require("consola");
 const dotenv = require("dotenv");
-const { v4: uuid } = require('uuid');
+const { v4: uuid } = require("uuid");
 const { Client, Config, CheckoutAPI } = require("@adyen/api-library");
 const { Nuxt, Builder } = require("nuxt");
 
@@ -18,7 +18,7 @@ nuxtConfig.dev = process.env.NODE_ENV !== "production";
 
 // Enables environment variables by parsing the .env file and assigning it to process.env
 dotenv.config({
-  path: "./.env",
+  path: "./.env"
 });
 
 // Adyen Node.js API library boilerplate (configuration, etc.)
@@ -28,10 +28,6 @@ const client = new Client({ config });
 client.setEnvironment("TEST");
 const checkout = new CheckoutAPI(client);
 
-// A temporary store to keep payment data to be sent in additional payment details and redirects.
-// This is more secure than a cookie. In a real application, this should be in a database.
-const paymentDataStore = {};
-
 /* ################# API ENDPOINTS ###################### */
 
 // Get payment methods
@@ -39,7 +35,7 @@ app.post("/api/getPaymentMethods", async (req, res) => {
   try {
     const response = await checkout.paymentMethods({
       channel: "Web",
-      merchantAccount: process.env.MERCHANT_ACCOUNT,
+      merchantAccount: process.env.MERCHANT_ACCOUNT
     });
     res.json({ response, clientKey: process.env.CLIENT_KEY });
   } catch (err) {
@@ -66,17 +62,16 @@ app.post("/api/initiatePayment", async (req, res) => {
       channel: "Web", // required
       additionalData: {
         // required for 3ds2 native flow
-        allow3DS2: true,
+        allow3DS2: true
       },
       origin: "http://localhost:8080", // required for 3ds2 native flow
       browserInfo: req.body.browserInfo, // required for 3ds2
       shopperIP, // required by some issuers for 3ds2
-      // we pass the orderRef in return URL to get paymentData during redirects
       returnUrl: `http://localhost:8080/api/handleShopperRedirect?orderRef=${orderRef}`, // required for 3ds2 redirect flow
       // special handling for boleto
       paymentMethod: req.body.paymentMethod.type.includes("boleto")
         ? {
-            type: "boletobancario_santander",
+            type: "boletobancario_santander"
           }
         : req.body.paymentMethod,
       // Below fields are required for Boleto:
@@ -103,7 +98,7 @@ app.post("/api/initiatePayment", async (req, res) => {
           description: "Shoes",
           id: "Item 1",
           taxAmount: "69",
-          amountIncludingTax: "400",
+          amountIncludingTax: "400"
         },
         {
           quantity: "2",
@@ -112,16 +107,11 @@ app.post("/api/initiatePayment", async (req, res) => {
           description: "Socks",
           id: "Item 2",
           taxAmount: "52",
-          amountIncludingTax: "300",
-        },
-      ],
+          amountIncludingTax: "300"
+        }
+      ]
     });
 
-    const { action } = response;
-
-    if (action) {
-      paymentDataStore[orderRef] = action.paymentData;
-    }
     res.json(response);
   } catch (err) {
     console.error(`Error: ${err.message}, error code: ${err.errorCode}`);
@@ -133,7 +123,7 @@ app.post("/api/submitAdditionalDetails", async (req, res) => {
   // Create the payload for submitting payment details
   const payload = {
     details: req.body.details,
-    paymentData: req.body.paymentData,
+    paymentData: req.body.paymentData
   };
 
   try {
@@ -151,25 +141,16 @@ app.post("/api/submitAdditionalDetails", async (req, res) => {
 // Handle all redirects from payment type
 app.all("/api/handleShopperRedirect", async (req, res) => {
   // Create the payload for submitting payment details
-  const orderRef = req.query.orderRef;
   const redirect = req.method === "GET" ? req.query : req.body;
   const details = {};
-  if (redirect.payload) {
-    details.payload = redirect.payload;
-  } else if (redirect.redirectResult) {
+  if (redirect.redirectResult) {
     details.redirectResult = redirect.redirectResult;
-  } else {
-    details.MD = redirect.MD;
-    details.PaRes = redirect.PaRes;
+  } else if (redirect.payload) {
+    details.payload = redirect.payload;
   }
 
-  const payload = {
-    details,
-    paymentData: paymentDataStore[orderRef],
-  };
-
   try {
-    const response = await checkout.paymentsDetails(payload);
+    const response = await checkout.paymentsDetails({ details });
     // Conditionally handle different result codes for the shopper
     switch (response.resultCode) {
       case "Authorised":
@@ -232,7 +213,7 @@ async function start() {
   app.listen(port, host);
   consola.ready({
     message: `Server listening on http://${host}:${port}`,
-    badge: true,
+    badge: true
   });
 }
 start();

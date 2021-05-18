@@ -11,11 +11,11 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
-    "@adyen/adyen-web": "^3.17.1",
-    "@adyen/api-library": "^5.0.1",
+    "@adyen/adyen-web": "^4.5.0",
+    "@adyen/api-library": "^8.1.0",
     "@nuxtjs/dotenv": "^1.4.1",
-    "cross-env": "^5.2.0",
-    "dotenv": "^8.2.0",
+    "cross-env": "^7.0.3",
+    "dotenv": "^9.0.2",
     "express": "^4.16.4",
     "nuxt": "^2.0.0",
     "uuid": "^8.3.1"
