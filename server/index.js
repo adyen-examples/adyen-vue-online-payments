@@ -98,9 +98,9 @@ app.post("/api/webhook/notifications", async (req, res) => {
   // Notification Request JSON
   const notificationRequest = req.body;
   const notificationRequestItems = notificationRequest.notificationItems;
-  var validHMACrequest = true;
 
   // Handling multiple notificationRequests
+  let validHMAC = true;
   notificationRequestItems.forEach(function(notificationRequestItem) {
 
     const notification = notificationRequestItem.NotificationRequestItem
@@ -111,13 +111,13 @@ app.post("/api/webhook/notifications", async (req, res) => {
       const eventCode = notification.eventCode;
       console.log('merchantReference:' + merchantReference + " eventCode:" + eventCode);
     } else {
-      // Non valid NotificationRequest
+      // In case of an invalid HMAC signature
       console.log("Non valid NotificationRequest");
-      validHMACrequest = false
+      validHMAC = false;
     }
   });
-
-  if(validHMACrequest) {
+  // Send [accepted] only when all HMAC signatures are valid
+  if(validHMAC) {
     res.send('[accepted]')
   }
 });
