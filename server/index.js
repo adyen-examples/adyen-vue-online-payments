@@ -2,6 +2,7 @@ const express = require("express");
 const consola = require("consola");
 const dotenv = require("dotenv");
 const { v4: uuid } = require("uuid");
+const { hmacValidator } = require('@adyen/api-library');
 const { Client, Config, CheckoutAPI } = require("@adyen/api-library");
 const { Nuxt, Builder } = require("nuxt");
 
@@ -88,6 +89,38 @@ app.all("/api/handleShopperRedirect", async (req, res) => {
 });
 
 /* ################# end API ENDPOINTS ###################### */
+
+/* ################# WEBHOOK ###################### */
+
+app.post("/api/webhook/notifications", async (req, res) => {
+
+  const hmacKey = process.env.HMAC_KEY;
+  const validator = new hmacValidator();
+  // Notification Request JSON
+  const notificationRequest = req.body;
+  const notificationRequestItems = notificationRequest.notificationItems;
+
+  // Handling multiple notificationRequests
+  notificationRequestItems.forEach(function(notificationRequestItem) {
+
+    const notification = notificationRequestItem.NotificationRequestItem
+    // Handle the notification
+    if( validator.validateHMAC(notification, hmacKey) ) {
+      // Process the notification based on the eventCode
+      const merchantReference = notification.merchantReference;
+      const eventCode = notification.eventCode;
+      console.log('merchantReference:' + merchantReference + " eventCode:" + eventCode);
+    } else {
+      // Non valid NotificationRequest
+      console.log("Non valid NotificationRequest");
+    }
+  });
+
+  res.send('[accepted]')
+});
+
+
+/* ################# end WEBHOOK ###################### */
 
 // Setup and start Nuxt.js
 async function start() {

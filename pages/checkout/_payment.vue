@@ -29,13 +29,13 @@ async function startCheckout(ref) {
     let { response, clientKey } = await callServer("/api/sessions?type=" + ref.type);
 
     // Set global variables
-    localclientKey = clientKey
-    const checkoutSessionResponse = response
-    sessionId = checkoutSessionResponse.id
-    redirectResult = checkoutSessionResponse.redirectResult
+    localclientKey = clientKey;
+    const checkoutSessionResponse = response;
+    sessionId = checkoutSessionResponse.id;
+    redirectResult = checkoutSessionResponse.redirectResult;
 
     // Create AdyenCheckout using Sessions response
-    const checkout = await createAdyenCheckout(checkoutSessionResponse)
+    const checkout = await createAdyenCheckout(checkoutSessionResponse);
 
     // Create an instance of Drop-in and mount it
     checkout.create(ref.type).mount(ref.$refs[ref.type]);
@@ -49,7 +49,6 @@ async function startCheckout(ref) {
 // Some payment methods use redirects. This is where we finalize the operation
 async function finalizeCheckout() {
   try {
-    alert("finalize")
     // Create AdyenCheckout re-using existing Session
     const checkout = await createAdyenCheckout({id: sessionId});
     // Submit the extracted redirectResult (to trigger onPaymentCompleted() handler)

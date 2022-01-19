@@ -43,12 +43,17 @@ npm install
 
 ## Usage
 
-1. Create a `./.env` file with your [API key](https://docs.adyen.com/user-management/how-to-get-the-api-key), [Client Key](https://docs.adyen.com/user-management/client-side-authentication), and merchant account name (all credentials are in string format):
+1. Create a `./.env` file with the required info
+- [API key](https://docs.adyen.com/user-management/how-to-get-the-api-key)
+- [Client Key](https://docs.adyen.com/user-management/client-side-authentication)
+- [Merchant Account](https://docs.adyen.com/account/account-structure)
+- [HMAC Key](https://docs.adyen.com/development-resources/webhooks/verify-hmac-signatures)
 
 ```
 API_KEY="your_API_key_here"
 MERCHANT_ACCOUNT="your_merchant_account_here"
 CLIENT_KEY="your_client_key_here"
+HMAC_KEY="your_client_HMAC_key_here"
 ```
 
 2. Start the server:
