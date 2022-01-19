@@ -45,7 +45,6 @@ app.post("/api/sessions", async (req, res) => {
       reference: orderRef, // required: your Payment Reference
       returnUrl: `http://localhost:8080/api/handleShopperRedirect?orderRef=${orderRef}` // set redirect URL required for some payment methods
     });
-    console.log(response)
     res.json({ response, clientKey: process.env.CLIENT_KEY });
   } catch (err) {
     console.error(`Error: ${err.message}, error code: ${err.errorCode}`);
@@ -99,6 +98,7 @@ app.post("/api/webhook/notifications", async (req, res) => {
   // Notification Request JSON
   const notificationRequest = req.body;
   const notificationRequestItems = notificationRequest.notificationItems;
+  var validHMACrequest = true;
 
   // Handling multiple notificationRequests
   notificationRequestItems.forEach(function(notificationRequestItem) {
@@ -113,10 +113,13 @@ app.post("/api/webhook/notifications", async (req, res) => {
     } else {
       // Non valid NotificationRequest
       console.log("Non valid NotificationRequest");
+      validHMACrequest = false
     }
   });
 
-  res.send('[accepted]')
+  if(validHMACrequest) {
+    res.send('[accepted]')
+  }
 });
 
 
