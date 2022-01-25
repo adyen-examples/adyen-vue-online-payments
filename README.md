@@ -50,10 +50,10 @@ npm install
 - [HMAC Key](https://docs.adyen.com/development-resources/webhooks/verify-hmac-signatures)
 
 ```
-API_KEY="your_API_key_here"
-MERCHANT_ACCOUNT="your_merchant_account_here"
-CLIENT_KEY="your_client_key_here"
-HMAC_KEY="your_client_HMAC_key_here"
+ADYEN_API_KEY="your_API_key_here"
+ADYEN_MERCHANT_ACCOUNT="your_merchant_account_here"
+ADYEN_CLIENT_KEY="your_client_key_here"
+ADYEN_HMAC_KEY="your_client_HMAC_key_here"
 ```
 
 2. Start the server:
