@@ -70,7 +70,6 @@ export default {
     },
 
     async finalizeCheckout() {
-      alert('finalize')
       try {
         // Create AdyenCheckout re-using existing Session
         const checkout = await this.createAdyenCheckout();
