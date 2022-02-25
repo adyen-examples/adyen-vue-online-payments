@@ -75,7 +75,6 @@ export default {
     },
 
     async finalizeCheckout() {
-      alert("finalize")
       try {
         // Create AdyenCheckout re-using existing Session
         const checkout = await this.createAdyenCheckout({id: localStorage.getItem('sessionID')});
@@ -119,7 +118,6 @@ export default {
           }
         },
         onPaymentCompleted: (result, component) => {
-          debugger;
           console.log("result: " + result);
           this.handleServerResponse(result, component);
         },
