@@ -15,13 +15,14 @@ let AdyenCheckout;
 if (process.client) {
   AdyenCheckout = require("@adyen/adyen-web");
 }
+
 export default {
   components: {},
   data() {
     return {
       sessionId: '',
       redirectResult: '',
-      localclientKey: '',
+      clientKey: '',
     }
   },
   head() {
@@ -33,10 +34,9 @@ export default {
     return { type: route.params.payment };
   },
   mounted() {
-
     if (localStorage.getItem('sessionID')) {
       this.finalizeCheckout();
-      localStorage.clear()
+      localStorage.clear();
     } else {
       this.startCheckout();
     }
@@ -44,21 +44,17 @@ export default {
   methods: {
     async startCheckout() {
       try {
-        // Init Sessions
-        let { response, clientKey } = await this.callServer("/api/sessions?type=" + this.type);
+        // Initiate Sessions
+        const {response, clientKey} = await this.callServer("/api/sessions?type=" + this.type);
 
-        // Set global variables
-        this.localclientKey = clientKey;
-        this.sessionId = response.sessionId;
-        this.redirectResult = response.redirectResult;
-
-        // Put session ID in local storage so sessionId can be retrieved to finalize checkout
+        // Set Data variables
+        this.clientKey = clientKey;
+        this.sessionId = response.id;
+        // Create a session ID in local storage so value can be stored and retrieved to finalize checkout
         localStorage.setItem('sessionID', this.sessionId);
 
-
         // Create AdyenCheckout using Sessions response
-        const checkoutSessionResponse = response;
-        const checkout = await this.createAdyenCheckout(checkoutSessionResponse);
+        const checkout = await this.createAdyenCheckout(response);
 
         // Create an instance of Drop-in and mount it
         checkout.create(this.type).mount(this.$refs[this.type]);
@@ -72,7 +68,8 @@ export default {
     async finalizeCheckout() {
       try {
         // Create AdyenCheckout re-using existing Session
-        const checkout = await this.createAdyenCheckout();
+        const checkout = await this.createAdyenCheckout({id: localStorage.getItem('sessionID')});
+
         // Submit the extracted redirectResult (to trigger onPaymentCompleted() handler)
         checkout.submitDetails({details: this.redirectResult});
       } catch (error) {
@@ -83,7 +80,7 @@ export default {
 
     async createAdyenCheckout(session) {
       const configuration = {
-        clientKey: this.localclientKey,
+        clientKey: this.clientKey ,
         locale: "en_US",
         environment: "test",
         showPayButton: true,
