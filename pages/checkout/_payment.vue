@@ -39,13 +39,11 @@ export default {
   async mounted() {
 
     const urlParams = new URLSearchParams(window.location.search);
-    this.sessionId = urlParams.get('sessionId'); // Unique identifier for the payment session
     this.redirectResult = urlParams.get('redirectResult');
 
     if (localStorage.getItem('sessionID')) {
       await this.finalizeCheckout();
       localStorage.clear();
-
     }
     await this.startCheckout();
 
@@ -59,7 +57,6 @@ export default {
         // Set Data variables
         this.clientKey = clientKey;
         this.sessionId = response.id;
-
 
         // Create a session ID in local storage so value can be stored and retrieved to finalize checkout
         localStorage.setItem('sessionID', this.sessionId);
@@ -78,7 +75,7 @@ export default {
     },
 
     async finalizeCheckout() {
-      debugger;
+      alert("finalize")
       try {
         // Create AdyenCheckout re-using existing Session
         const checkout = await this.createAdyenCheckout({id: localStorage.getItem('sessionID')});
