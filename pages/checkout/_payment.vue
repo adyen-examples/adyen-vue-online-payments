@@ -33,13 +33,22 @@ export default {
   asyncData({ route }) {
     return { type: route.params.payment };
   },
-  mounted() {
+  created() {
+
+  },
+  async mounted() {
+
+    const urlParams = new URLSearchParams(window.location.search);
+    this.sessionId = urlParams.get('sessionId'); // Unique identifier for the payment session
+    this.redirectResult = urlParams.get('redirectResult');
+
     if (localStorage.getItem('sessionID')) {
-      this.finalizeCheckout();
+      await this.finalizeCheckout();
       localStorage.clear();
-    } else {
-      this.startCheckout();
+
     }
+    await this.startCheckout();
+
   },
   methods: {
     async startCheckout() {
@@ -50,8 +59,11 @@ export default {
         // Set Data variables
         this.clientKey = clientKey;
         this.sessionId = response.id;
+
+
         // Create a session ID in local storage so value can be stored and retrieved to finalize checkout
         localStorage.setItem('sessionID', this.sessionId);
+        localStorage.setItem('clientKey', this.clientKey);
 
         // Create AdyenCheckout using Sessions response
         const checkout = await this.createAdyenCheckout(response);
@@ -66,12 +78,14 @@ export default {
     },
 
     async finalizeCheckout() {
+      debugger;
       try {
         // Create AdyenCheckout re-using existing Session
         const checkout = await this.createAdyenCheckout({id: localStorage.getItem('sessionID')});
 
         // Submit the extracted redirectResult (to trigger onPaymentCompleted() handler)
         checkout.submitDetails({details: this.redirectResult});
+
       } catch (error) {
         console.error(error);
         alert("Error occurred. Look at console for details");
@@ -80,7 +94,7 @@ export default {
 
     async createAdyenCheckout(session) {
       const configuration = {
-        clientKey: this.clientKey ,
+        clientKey: localStorage.getItem('clientKey') ,
         locale: "en_US",
         environment: "test",
         showPayButton: true,
@@ -108,6 +122,7 @@ export default {
           }
         },
         onPaymentCompleted: (result, component) => {
+          debugger;
           console.log("result: " + result);
           this.handleServerResponse(result, component);
         },
