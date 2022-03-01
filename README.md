@@ -51,7 +51,6 @@ npm install
 
 Remember to include ```http://localhost:8080``` in the list of Allowed Origins
 ```
-PORT=8080
 ADYEN_API_KEY="your_API_key_here"
 ADYEN_MERCHANT_ACCOUNT="your_merchant_account_here"
 ADYEN_CLIENT_KEY="your_client_key_here"
