@@ -92,7 +92,7 @@ export default {
       const configuration = {
         clientKey: localStorage.getItem('clientKey') ,
         locale: "en_US",
-        environment: "test",
+        environment: "test", // change to live for production
         showPayButton: true,
         session: session,
         paymentMethodsConfiguration: {

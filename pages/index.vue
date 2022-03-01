@@ -139,7 +139,7 @@
 <script>
 export default {
   head: {
-    title: "Checkout demos"
+    title: "Checkout Demo"
   }
 };
 </script>

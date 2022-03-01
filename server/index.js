@@ -26,7 +26,7 @@ dotenv.config({
 const config = new Config();
 config.apiKey = process.env.ADYEN_API_KEY;
 const client = new Client({ config });
-client.setEnvironment("TEST");
+client.setEnvironment("TEST"); // change to LIVE for production
 const checkout = new CheckoutAPI(client);
 
 /* ################# API ENDPOINTS ###################### */
@@ -91,19 +91,20 @@ app.all("/api/handleShopperRedirect", async (req, res) => {
 
 /* ################# WEBHOOK ###################### */
 
-app.post("/api/webhook/notifications", async (req, res) => {
+app.post("/api/webhooks/notifications", async (req, res) => {
 
-  const hmacKey = process.env.AYDEN_HMAC_KEY;
-  const validator = new hmacValidator();
+  // YOUR_HMAC_KEY from the Customer Area
+  const hmacKey = process.env.ADYEN_HMAC_KEY;
+  const validator = new hmacValidator()
   // Notification Request JSON
   const notificationRequest = req.body;
-  const notificationRequestItems = notificationRequest.notificationItems;
+  const notificationRequestItems = notificationRequest.notificationItems
 
   // Handling multiple notificationRequests
-  let validHMAC = true;
   notificationRequestItems.forEach(function(notificationRequestItem) {
 
     const notification = notificationRequestItem.NotificationRequestItem
+
     // Handle the notification
     if( validator.validateHMAC(notification, hmacKey) ) {
       // Process the notification based on the eventCode
@@ -111,15 +112,13 @@ app.post("/api/webhook/notifications", async (req, res) => {
       const eventCode = notification.eventCode;
       console.log('merchantReference:' + merchantReference + " eventCode:" + eventCode);
     } else {
-      // In case of an invalid HMAC signature
-      console.log("Non valid NotificationRequest");
-      validHMAC = false;
+      // invalid hmac: do not send [accepted] response
+      console.log("Invalid HMAC signature: " + notification);
+      res.status(401).send('Invalid HMAC signature');
     }
   });
-  // Send [accepted] only when all HMAC signatures are valid
-  if(validHMAC) {
-    res.send('[accepted]')
-  }
+
+  res.send('[accepted]')
 });
 
 
