@@ -20,6 +20,9 @@
     "nuxt": "^2.15.8",
     "uuid": "^8.3.2"
   },
+  "engines": {
+    "node": ">=15.0.0 || <=17.0.0"
+  },
   "devDependencies": {
     "nodemon": "^2.0.15"
   }
