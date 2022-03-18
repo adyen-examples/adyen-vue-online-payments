@@ -1,7 +1,15 @@
-FROM node:16
+FROM node:16-alpine
 
-COPY . .
+WORKDIR /app
+
+COPY package*.json ./
+
 RUN npm install
+
+# copy project files
+COPY . .
+
 RUN npm run build
+
 EXPOSE 8080
 CMD [ "npm", "start" ]
