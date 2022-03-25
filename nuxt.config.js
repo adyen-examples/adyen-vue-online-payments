@@ -3,9 +3,9 @@ require("dotenv").config();
 module.exports = {
   telemetry: false,
   server: {
+    host: "0.0.0.0",
     port: 8080,
   },
-  mode: "universal",
   /*
    ** Headers of the page
    */
