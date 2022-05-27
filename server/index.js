@@ -33,17 +33,18 @@ const checkout = new CheckoutAPI(client);
 
 // Invoke /sessions endpoint
 app.post("/api/sessions", async (req, res) => {
-
+  const localhost = req.get('host');
   try {
     // unique ref for the transaction
     const orderRef = uuid();
+    const localhost = req.get('host');
     // Ideally the data passed here should be computed based on business logic
     const response = await checkout.sessions({
       amount: { currency: "EUR", value: 1000 }, // value is 10€ in minor units
       countryCode: "NL",
       merchantAccount: process.env.ADYEN_MERCHANT_ACCOUNT, // required
       reference: orderRef, // required: your Payment Reference
-      returnUrl: `http://localhost:8080/api/handleShopperRedirect?orderRef=${orderRef}` // set redirect URL required for some payment methods
+      returnUrl: `https://${localhost}/api/handleShopperRedirect?orderRef=${orderRef}` // set redirect URL required for some payment methods
     });
     res.json({ response, clientKey: process.env.ADYEN_CLIENT_KEY });
   } catch (err) {
