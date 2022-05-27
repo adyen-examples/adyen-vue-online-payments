@@ -37,14 +37,17 @@ app.post("/api/sessions", async (req, res) => {
   try {
     // unique ref for the transaction
     const orderRef = uuid();
-    const localhost = req.get('host');
+
+    const protocol = req.socket.encrypted? 'https' : 'http';
+    const host = req.get('host');
+
     // Ideally the data passed here should be computed based on business logic
     const response = await checkout.sessions({
       amount: { currency: "EUR", value: 1000 }, // value is 10€ in minor units
       countryCode: "NL",
       merchantAccount: process.env.ADYEN_MERCHANT_ACCOUNT, // required
       reference: orderRef, // required: your Payment Reference
-      returnUrl: `https://${localhost}/api/handleShopperRedirect?orderRef=${orderRef}` // set redirect URL required for some payment methods
+      returnUrl: `${protocol}://${host}/api/handleShopperRedirect?orderRef=${orderRef}` // set redirect URL required for some payment methods
     });
     res.json({ response, clientKey: process.env.ADYEN_CLIENT_KEY });
   } catch (err) {
@@ -141,7 +144,7 @@ async function start() {
 
   app.listen(port, host);
   consola.ready({
-    message: `Server listening on http://localhost:${port}`,
+    message: `Server listening on ${host}:${port}`,
     badge: true
   });
 }
