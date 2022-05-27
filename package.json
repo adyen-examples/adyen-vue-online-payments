@@ -15,7 +15,7 @@
     "@adyen/api-library": "^10.3.0",
     "@nuxtjs/dotenv": "^1.4.1",
     "cross-env": "^7.0.3",
-    "dotenv": "^11.0.0",
+    "dotenv": "^16.0.1",
     "express": "^4.17.2",
     "nuxt": "^2.15.8",
     "uuid": "^8.3.2"
