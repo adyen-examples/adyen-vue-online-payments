@@ -93,6 +93,8 @@ app.all("/api/handleShopperRedirect", async (req, res) => {
 
 app.post("/api/webhooks/notifications", async (req, res) => {
 
+  var ret = false
+
   // YOUR_HMAC_KEY from the Customer Area
   const hmacKey = process.env.ADYEN_HMAC_KEY;
   const validator = new hmacValidator()
@@ -101,7 +103,7 @@ app.post("/api/webhooks/notifications", async (req, res) => {
   const notificationRequestItems = notificationRequest.notificationItems
 
   // Handling multiple notificationRequests
-  notificationRequestItems.forEach(function(notificationRequestItem) {
+  notificationRequestItems.every(function(notificationRequestItem) {
 
     const notification = notificationRequestItem.NotificationRequestItem
 
@@ -111,14 +113,23 @@ app.post("/api/webhooks/notifications", async (req, res) => {
       const merchantReference = notification.merchantReference;
       const eventCode = notification.eventCode;
       console.log('merchantReference:' + merchantReference + " eventCode:" + eventCode);
+      // notification ok
+      ret = true
     } else {
       // invalid hmac: do not send [accepted] response
       console.log("Invalid HMAC signature: " + notification);
-      res.status(401).send('Invalid HMAC signature');
+      // notification cannot be accepted
+      ret = false
+      return false;  // exit from loop
     }
   });
 
-  res.send('[accepted]')
+  if(ret) {
+    res.send('[accepted]')
+  } else {
+    res.status(401).send('Invalid HMAC signature');
+  }
+  
 });
 
 
