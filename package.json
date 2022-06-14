@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@adyen/adyen-web": "^5.16.0",
-    "@adyen/api-library": "^10.3.0",
+    "@adyen/api-library": "^11.0.0",
     "@nuxtjs/dotenv": "^1.4.1",
     "cross-env": "^7.0.3",
     "dotenv": "^16.0.1",
