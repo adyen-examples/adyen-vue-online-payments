@@ -11,7 +11,7 @@
               alt
             />
             <p class="order-summary-list-list-item-title">Sunglasses</p>
-            <p class="order-summary-list-list-item-price">5.00</p>
+            <p class="order-summary-list-list-item-price">50.00</p>
           </li>
           <li class="order-summary-list-list-item">
             <img
@@ -20,13 +20,13 @@
               alt
             />
             <p class="order-summary-list-list-item-title">Headphones</p>
-            <p class="order-summary-list-list-item-price">5.00</p>
+            <p class="order-summary-list-list-item-price">50.00</p>
           </li>
         </ul>
       </div>
       <div class="cart-footer">
         <span class="cart-footer-label">Total:</span>
-        <span class="cart-footer-amount">10.00</span>
+        <span class="cart-footer-amount">100.00</span>
         <nuxt-link :to="`/checkout/${type}`">
           <p class="button">Continue to checkout</p>
         </nuxt-link>
