@@ -6,10 +6,12 @@ const { hmacValidator } = require('@adyen/api-library');
 const { Client, Config, CheckoutAPI } = require("@adyen/api-library");
 const { Nuxt, Builder } = require("nuxt");
 
-// init app
+// Init app
 const app = express();
+
 // Parse JSON bodies
 app.use(express.json());
+
 // Parse URL-encoded bodies
 app.use(express.urlencoded({ extended: true }));
 
@@ -35,7 +37,7 @@ const checkout = new CheckoutAPI(client);
 app.post("/api/sessions", async (req, res) => {
   const localhost = req.get('host');
   try {
-    // unique ref for the transaction
+    // Unique ref for the transaction
     const orderRef = uuid();
 
     const protocol = req.socket.encrypted? 'https' : 'http';
@@ -43,16 +45,16 @@ app.post("/api/sessions", async (req, res) => {
 
     // Ideally the data passed here should be computed based on business logic
     const response = await checkout.sessions({
-      amount: { currency: "EUR", value: 10000 }, // value is 100€ in minor units
+      amount: { currency: "EUR", value: 10000 }, // Value is 100€ in minor units
       countryCode: "NL",
-      merchantAccount: process.env.ADYEN_MERCHANT_ACCOUNT, // required
-      reference: orderRef, // required: your Payment Reference
+      merchantAccount: process.env.ADYEN_MERCHANT_ACCOUNT, // Required: your merchant account
+      reference: orderRef, // Required: your Payment Reference
       // set lineItems required for some payment methods (ie Klarna)
       lineItems: [
         {quantity: 1, amountIncludingTax: 5000 , description: "Sunglasses"},
         {quantity: 1, amountIncludingTax: 5000 , description: "Headphones"}
       ] ,
-      returnUrl: `${protocol}://${host}/api/handleShopperRedirect?orderRef=${orderRef}` // set redirect URL required for some payment methods
+      returnUrl: `${protocol}://${host}/api/handleShopperRedirect?orderRef=${orderRef}` // Set redirect URL required for some payment methods
     });
     res.json({ response, clientKey: process.env.ADYEN_CLIENT_KEY });
   } catch (err) {
@@ -99,47 +101,37 @@ app.all("/api/handleShopperRedirect", async (req, res) => {
 /* ################# end API ENDPOINTS ###################### */
 
 /* ################# WEBHOOK ###################### */
-
 app.post("/api/webhooks/notifications", async (req, res) => {
-
-  var ret = false
-
   // YOUR_HMAC_KEY from the Customer Area
   const hmacKey = process.env.ADYEN_HMAC_KEY;
   const validator = new hmacValidator()
-  // Notification Request JSON
+
+  // NotificationRequest JSON
   const notificationRequest = req.body;
-  const notificationRequestItems = notificationRequest.notificationItems
 
-  // Handling multiple notificationRequests
-  notificationRequestItems.every(function(notificationRequestItem) {
+  // Fetch first (and only) NotificationRequestItem
+  const notification = notificationRequest.notificationItems[0].NotificationRequestItem;
 
-    const notification = notificationRequestItem.NotificationRequestItem
-
-    // Handle the notification
-    if( validator.validateHMAC(notification, hmacKey) ) {
-      // Process the notification based on the eventCode
-      const merchantReference = notification.merchantReference;
-      const eventCode = notification.eventCode;
-      console.log('merchantReference:' + merchantReference + " eventCode:" + eventCode);
-      // notification ok
-      ret = true
-    } else {
-      // invalid hmac: do not send [accepted] response
-      console.log("Invalid HMAC signature: " + notification);
-      // notification cannot be accepted
-      ret = false
-      return false;  // exit from loop
-    }
-  });
-
-  if(ret) {
-    res.send('[accepted]')
-  } else {
+  // Handle the notification
+  if(!validator.validateHMAC(notification, hmacKey)) {
+    // invalid hmac: do not send [accepted] response
+    console.log("Invalid HMAC signature: " + notification);
     res.status(401).send('Invalid HMAC signature');
+    return;
   }
-  
+
+  // Process the notification asynchronously based on the eventCode
+  consumeEvent(notification);
+  res.send('[accepted]');
 });
+
+// Process payload
+function consumeEvent(notification) {
+  // Add item to DB, queue or different thread, we just log it for now
+  const merchantReference = notification.merchantReference;
+  const eventCode = notification.eventCode;
+  console.log('merchantReference:' + merchantReference + " eventCode:" + eventCode);
+}
 
 
 /* ################# end WEBHOOK ###################### */
