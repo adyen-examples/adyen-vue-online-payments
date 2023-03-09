@@ -54,7 +54,7 @@ app.post("/api/sessions", async (req, res) => {
         {quantity: 1, amountIncludingTax: 5000 , description: "Sunglasses"},
         {quantity: 1, amountIncludingTax: 5000 , description: "Headphones"}
       ] ,
-      returnUrl: `${protocol}://${host}/api/handleShopperRedirect?orderRef=${orderRef}` // Set redirect URL required for some payment methods
+      returnUrl: `${protocol}://${host}/api/handleShopperRedirect?orderRef=${orderRef}` // Required `returnUrl` param: Set redirect URL required for some payment methods
     });
     res.json({ response, clientKey: process.env.ADYEN_CLIENT_KEY });
   } catch (err) {
