@@ -19,10 +19,10 @@ This repository includes examples of PCI-compliant UI integrations for online pa
 
 ## Supported Integrations
 
-**Vue.js + Express** demos of the following client-side integrations are currently available in this repository:
+[Online payments](https://docs.adyen.com/online-payments) **Vue.js + Express** demos of the following client-side integrations are currently available in this repository:
 
-- [Drop-in](https://docs.adyen.com/checkout/drop-in-web)
-- [Component](https://docs.adyen.com/checkout/components-web)
+- Drop-in
+- Components
   - ACH
   - Alipay
   - Boleto Bancário
