@@ -1,4 +1,4 @@
-# Adyen [online payment](https://docs.adyen.com/checkout) integration demos
+# Adyen [online payment]([https://docs.adyen.com/checkout](https://docs.adyen.com/online-payments)) integration demos
 
 ## Run this integration in seconds using [Gitpod](https://gitpod.io/)
 
