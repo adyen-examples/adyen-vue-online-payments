@@ -35,11 +35,11 @@ const checkout = new CheckoutAPI(client);
 
 // Invoke /sessions endpoint
 app.post("/api/sessions", async (req, res) => {
-  const localhost = req.get('host');
+
   try {
     // Unique ref for the transaction
     const orderRef = uuid();
-
+    // Determine host (for setting returnUrl)
     const protocol = req.socket.encrypted? 'https' : 'http';
     const host = req.get('host');
 
