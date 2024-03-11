@@ -75,7 +75,7 @@ app.all("/api/handleShopperRedirect", async (req, res) => {
   }
 
   try {
-    const response = await checkout.paymentsDetails({ details });
+    const response = await checkout.PaymentsApi.paymentsDetails({ details });
     // Conditionally handle different result codes for the shopper
     switch (response.resultCode) {
       case "Authorised":
@@ -122,7 +122,7 @@ app.post("/api/webhooks/notifications", async (req, res) => {
 
   // Process the notification asynchronously based on the eventCode
   consumeEvent(notification);
-  
+
   // acknowledge event has been consumed
   res.status(202).send(); // Send a 202 response with an empty body
 });
