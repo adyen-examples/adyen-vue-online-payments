@@ -44,7 +44,7 @@ app.post("/api/sessions", async (req, res) => {
     const host = req.get('host');
 
     // Ideally the data passed here should be computed based on business logic
-    const response = await checkout.sessions({
+    const response = await checkout.PaymentsApi.sessions({
       amount: { currency: "EUR", value: 10000 }, // Value is 100€ in minor units
       countryCode: "NL",
       merchantAccount: process.env.ADYEN_MERCHANT_ACCOUNT, // Required: your merchant account
@@ -114,7 +114,7 @@ app.post("/api/webhooks/notifications", async (req, res) => {
 
   // Handle the notification
   if(!validator.validateHMAC(notification, hmacKey)) {
-    // invalid hmac: do not send [accepted] response
+    // invalid hmac
     console.log("Invalid HMAC signature: " + notification);
     res.status(401).send('Invalid HMAC signature');
     return;
@@ -122,7 +122,9 @@ app.post("/api/webhooks/notifications", async (req, res) => {
 
   // Process the notification asynchronously based on the eventCode
   consumeEvent(notification);
-  res.send('[accepted]');
+  
+  // acknowledge event has been consumed
+  res.status(202).send(); // Send a 202 response with an empty body
 });
 
 // Process payload
