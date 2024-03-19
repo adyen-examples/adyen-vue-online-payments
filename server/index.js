@@ -75,7 +75,7 @@ app.all("/api/handleShopperRedirect", async (req, res) => {
   }
 
   try {
-    const response = await checkout.paymentsDetails({ details });
+    const response = await checkout.PaymentsApi.paymentsDetails({ details });
     // Conditionally handle different result codes for the shopper
     switch (response.resultCode) {
       case "Authorised":
@@ -114,7 +114,7 @@ app.post("/api/webhooks/notifications", async (req, res) => {
 
   // Handle the notification
   if(!validator.validateHMAC(notification, hmacKey)) {
-    // invalid hmac: do not send [accepted] response
+    // invalid hmac
     console.log("Invalid HMAC signature: " + notification);
     res.status(401).send('Invalid HMAC signature');
     return;
@@ -122,7 +122,9 @@ app.post("/api/webhooks/notifications", async (req, res) => {
 
   // Process the notification asynchronously based on the eventCode
   consumeEvent(notification);
-  res.send('[accepted]');
+
+  // acknowledge event has been consumed
+  res.status(202).send(); // Send a 202 response with an empty body
 });
 
 // Process payload
