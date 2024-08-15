@@ -22,7 +22,7 @@ The demo leverages Adyen's API Library for Node.js ([GitHub](https://github.com/
 
 ## Requirements
 
-Node.js 12+
+Node.js 18+
 
 ## Installation
 
