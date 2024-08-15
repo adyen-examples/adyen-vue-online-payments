@@ -11,8 +11,8 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
-    "@adyen/adyen-web": "^5.60.0",
-    "@adyen/api-library": "^16.1.0",
+    "@adyen/adyen-web": "5.60.0",
+    "@adyen/api-library": "16.1.0",
     "@nuxtjs/dotenv": "^1.4.2",
     "cross-env": "^7.0.3",
     "dotenv": "^16.4.5",
