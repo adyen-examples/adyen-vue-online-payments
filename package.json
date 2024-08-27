@@ -14,7 +14,7 @@
   "dependencies": {
     "@adyen/adyen-web": "5.60.0",
     "@adyen/api-library": "v18.1.0",
-    "nuxt": "^3.12.4",
+    "nuxt": "^3.13.0",
     "vue": "^3.2.47",
     "uuid": "^9.0.1"
   },
