@@ -4,7 +4,7 @@ import { createAdyenClient } from '../adyen';
 export default defineEventHandler(async (event) => {
     console.log("/api/handleShopperRedirect");
 
-    const adyenCheckout = createAdyenClient();
+    const adyenCheckout = await createAdyenClient();
 
     try {
 
@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
         }
 
         // Call the Adyen Payments API
-        const response = await (await adyenCheckout).PaymentsApi.paymentsDetails({ details });
+        const response = await adyenCheckout.PaymentsApi.paymentsDetails({ details });
         console.log(response);
 
         // Conditionally handle different result codes

@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 export default defineEventHandler(async (event) => {
   console.log("/api/sessions");
 
-  const adyenCheckout = createAdyenClient();
+  const adyenCheckout = await createAdyenClient();
 
   const config = useRuntimeConfig();
 
@@ -23,7 +23,7 @@ export default defineEventHandler(async (event) => {
   console.log("returnUrl: " + returnUrl);
 
   try {
-    const response = await (await adyenCheckout).PaymentsApi.sessions({
+    const response = await adyenCheckout.PaymentsApi.sessions({
       amount: { currency: "EUR", value: 10000 },
       countryCode: "NL",
       merchantAccount: config.adyenMerchantAccount,
