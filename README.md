@@ -16,6 +16,8 @@ _NOTE: To allow the Adyen Drop-In and Components to load, you have to add `https
 
 This repository showcases a PCI-compliant integration of the [Sessions Flow](https://docs.adyen.com/online-payments/build-your-integration/additional-use-cases/), the default integration that we recommend for merchants. Explore this simplified e-commerce demo to discover the code, libraries and configuration you need to enable various payment options in your checkout experience.  
 
+The application is implemented in Typescript (5.0) using Nuxt v3 and Vue 3+.
+
 ![Card checkout demo](assets/images/cardcheckout.gif)
 
 The demo leverages Adyen's API Library for Node.js ([GitHub](https://github.com/Adyen/adyen-node-api-library) | [Docs](https://docs.adyen.com/development-resources/libraries#javascript)).
@@ -61,7 +63,7 @@ ADYEN_HMAC_KEY="your_hmac_key_here"
 npm run dev
 ```
 
-3. Visit [http://localhost:8080/](http://localhost:8080/) (**./pages/index.vue**) to select an integration type.
+3. Visit [http://localhost:8080/](http://localhost:8080/) to select an integration type.
 
 To try out integrations with test card numbers and payment method details, see [Test card numbers](https://docs.adyen.com/development-resources/test-cards/test-card-numbers).
 
