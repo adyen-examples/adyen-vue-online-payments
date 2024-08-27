@@ -1,11 +1,9 @@
 // Import necessary modules
 import { defineEventHandler, readBody } from 'h3'; 
-import adyen from "@adyen/api-library";
+import { hmacValidator } from "@adyen/api-library";
 
 export default defineEventHandler(async (event) => {
     console.log("/api/webhooks/notifications");
-
-    const { hmacValidator } = adyen;
 
     // YOUR_HMAC_KEY from the environment variables
     const hmacKey = process.env.ADYEN_HMAC_KEY;
@@ -25,7 +23,7 @@ export default defineEventHandler(async (event) => {
         console.log("Invalid HMAC signature:", notification);
         // Set the response status to 401 Unauthorized
         event.node.res.statusCode = 401;
-        return 'Invalid HMAC signature';
+        return "Invalid HMAC signature";
     }
 
     // Process the notification asynchronously based on the eventCode
@@ -37,9 +35,9 @@ export default defineEventHandler(async (event) => {
 });
 
 // Process payload
-function consumeEvent(notification) {
+async function consumeEvent(notification) {
     // Add item to DB, queue or different thread, we just log it for now
     const merchantReference = notification.merchantReference;
     const eventCode = notification.eventCode;
-    console.log('merchantReference:' + merchantReference + " eventCode:" + eventCode);
+    console.log("merchantReference:" + merchantReference + " eventCode:" + eventCode);
 }
