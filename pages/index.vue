@@ -104,13 +104,6 @@
           </div>
         </nuxt-link>
       </li>
-      <li class="integration-list-item">
-        <nuxt-link to="/preview?type=boletobancario_santander" class="integration-list-item-link">
-          <div class="title-container">
-            <p class="integration-list-item-title">Boleto Bancário</p>
-          </div>
-        </nuxt-link>
-      </li>
     </ul>
   </div>
 </template>
