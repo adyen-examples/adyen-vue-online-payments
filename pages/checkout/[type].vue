@@ -26,8 +26,8 @@ const sessionId = ref('');
 const redirectResult = ref('');
 const paymentRef = ref(type);
 
-// Function to call the server
-async function callServer(url, data) {
+// Function to invoke server-side API
+async function sendPostRequest(url, data) {
   const res = await fetch(url, {
     method: "POST",
     body: data ? JSON.stringify(data) : "",
@@ -98,7 +98,7 @@ async function createAdyenCheckout(session, clientKey = null) {
 // Function to start checkout
 async function startCheckout() {
   try {
-    const { response, clientKey } = await callServer(`/api/sessions?type=${type}`);
+    const { response, clientKey } = await sendPostRequest(`/api/sessions?type=${type}`);
 
     const checkout = await createAdyenCheckout(response, clientKey);
     checkout.create(type).mount(paymentRef.value);
