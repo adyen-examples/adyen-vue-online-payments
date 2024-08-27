@@ -5,20 +5,12 @@
       <div class="order-summary">
         <ul class="order-summary-list">
           <li class="order-summary-list-list-item">
-            <img
-              src="~/assets/images/sunglasses.png"
-              class="order-summary-list-list-item-image"
-              alt
-            />
+            <img src="~/public/images/sunglasses.png" class="order-summary-list-list-item-image" alt />
             <p class="order-summary-list-list-item-title">Sunglasses</p>
             <p class="order-summary-list-list-item-price">50.00</p>
           </li>
           <li class="order-summary-list-list-item">
-            <img
-              src="~/assets/images/headphones.png"
-              class="order-summary-list-list-item-image"
-              alt
-            />
+            <img src="~/public/images/headphones.png" class="order-summary-list-list-item-image" alt />
             <p class="order-summary-list-list-item-title">Headphones</p>
             <p class="order-summary-list-list-item-price">50.00</p>
           </li>
@@ -35,13 +27,9 @@
   </main>
 </template>
 
-<script>
-export default {
-  asyncData({ route }) {
-    return { type: route.query.type };
-  },
-  head: {
-    title: "Cart preview",
-  },
-};
+<script setup>
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+const type = route.query.type; // Access query parameter
 </script>

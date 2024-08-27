@@ -1,23 +1,21 @@
 {
-  "name": "viewapp",
+  "name": "nuxt-app",
   "version": "1.0.0",
   "description": "Checkout demo",
   "author": "Adyen",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_ENV=development nodemon server/index.js --watch server",
     "build": "nuxt build",
-    "start": "cross-env NODE_ENV=production node server/index.js",
-    "generate": "nuxt generate"
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
   },
   "dependencies": {
     "@adyen/adyen-web": "5.60.0",
-    "@adyen/api-library": "16.1.0",
-    "@nuxtjs/dotenv": "^1.4.2",
-    "cross-env": "^7.0.3",
-    "dotenv": "^16.4.5",
-    "express": "^4.19.2",
-    "nuxt": "^2.15.8",
+    "@adyen/api-library": "v18.1.0",
+    "nuxt": "^3.12.4",
+    "vue": "^3.2.47",
     "uuid": "^9.0.1"
   },
   "engines": {
