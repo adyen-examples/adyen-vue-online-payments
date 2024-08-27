@@ -14,8 +14,20 @@ name: "CodeQL"
 on:
   push:
     branches: [ "main" ]
+    paths-ignore:
+      - '**/README.md'
+      - README.md
+      - .gitignore
+      - .gitpod.yml
+      - LICENSE    
   pull_request:
     branches: [ "main" ]
+    paths-ignore:
+      - '**/README.md'
+      - README.md
+      - .gitignore
+      - .gitpod.yml
+      - LICENSE    
   schedule:
     - cron: '31 6 * * 2'
 
