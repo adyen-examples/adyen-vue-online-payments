@@ -12,7 +12,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@adyen/adyen-web": "5.68.0",
+    "@adyen/adyen-web": "6.3.0",
     "@adyen/api-library": "v19.2.0",
     "nuxt": "^3.13.2",
     "vue": "^3.2.47",
