@@ -1,0 +1,27 @@
+{
+  "name": "nuxt-app",
+  "version": "1.0.0",
+  "description": "Checkout demo",
+  "author": "Adyen",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@adyen/adyen-web": "5.68.0",
+    "@adyen/api-library": "v19.2.0",
+    "nuxt": "^3.13.2",
+    "vue": "^3.2.47",
+    "uuid": "^10.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0 <=20.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}
