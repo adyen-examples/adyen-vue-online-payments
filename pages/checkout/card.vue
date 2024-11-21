@@ -3,7 +3,7 @@
     <div id="payment-page">
       <div class="container">
         <div class="payment-container">
-          <div class="payment" ref="paymentRef"></div>
+          <div id="component-container" class="payment"></div>
         </div>
       </div>
     </div>
@@ -13,18 +13,11 @@
 <script setup>
 
 import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
-import AdyenCheckout from '@adyen/adyen-web';
-
-const route = useRoute();
-
-// Find type from route
-const type = route.params.type;
+import { AdyenCheckout, Card } from '@adyen/adyen-web';
 
 // Reactive references
 const sessionId = ref('');
 const redirectResult = ref('');
-const paymentRef = ref(type);
 
 // Function to invoke server-side API
 async function sendPostRequest(url, data) {
@@ -62,46 +55,60 @@ async function handleServerResponse(res, component) {
 }
 
 // Function to create AdyenCheckout instance
-async function createAdyenCheckout(session, clientKey = null) {
-  const configuration = {
-    clientKey: clientKey,
-    locale: "en_US",
-    environment: "test", // Change to 'live' for production
-    showPayButton: true,
-    session: session,
-    paymentMethodsConfiguration: {
-      ideal: { showImage: true },
-      card: {
-        hasHolderName: true,
-        holderNameRequired: true,
-        name: "Credit or debit card",
-        amount: { value: 1000, currency: "EUR" },
+async function createAdyenCheckout(session, clientKey) {
+  return AdyenCheckout(
+    {
+      clientKey,
+      session: session,
+      environment: "test",
+      amount: {
+        value: 10000,
+        currency: 'EUR'
       },
-      paypal: {
-        amount: { currency: "USD", value: 1000 },
-        environment: "test",
-        countryCode: "US", // Only needed for test
+      locale: "en_US",
+      countryCode: 'NL',
+      showPayButton: true,
+      onPaymentCompleted: (result, component) => {
+        console.info("onPaymentCompleted");
+        console.info(result, component);
+        handleServerResponse(result, component);
       },
-    },
-    onPaymentCompleted: (result, component) => {
-      console.log("result: " + result);
-      handleServerResponse(result, component);
-    },
-    onError: (error, component) => {
-      console.error(error.name, error.message, error.stack, component);
-    },
-  };
-
-  return new AdyenCheckout(configuration);
+      onPaymentFailed: (result, component) => {
+        console.info("onPaymentFailed");
+        console.info(result, component);
+        handleServerResponse(result, component);
+      },
+      onError: (error, component) => {
+        console.error("onError");
+        console.error(error.name, error.message, error.stack, component);
+        handleServerResponse(error, component);
+      },
+    }
+  );
 }
 
 // Function to start checkout
 async function startCheckout() {
   try {
-    const { response, clientKey } = await sendPostRequest(`/api/sessions?type=${type}`);
+    const { response, clientKey } = await sendPostRequest(`/api/sessions`);
 
     const checkout = await createAdyenCheckout(response, clientKey);
-    checkout.create(type).mount(paymentRef.value);
+    const card = new Card(checkout, {
+      // Optional configuration.
+      billingAddressRequired: false, // when true show the billing address input fields and mark them as required.
+      showBrandIcon: true, // when false not showing the brand logo 
+      hasHolderName: true, // show holder name
+      holderNameRequired: true, // make holder name mandatory
+      // configure placeholders
+      placeholders: { 
+        cardNumber: '1234 5678 9012 3456',
+        expiryDate: 'MM/YY', 
+        securityCodeThreeDigits: '123', 
+        securityCodeFourDigits: '1234',
+        holderName: 'J. Smith'
+      }
+    }).mount('#component-container');
+
   } catch (error) {
     console.error(error);
     alert("Error occurred. Look at console for details");
