@@ -11,7 +11,7 @@ export default defineNuxtConfig({
     adyenClientKey: process.env.ADYEN_CLIENT_KEY,
     adyenHmacKey: process.env.ADYEN_HMAC_KEY,
   },
-  css: ['~/public/css/main.css', '@adyen/adyen-web/dist/adyen.css'],
+  css: ['~/public/css/main.css', '@adyen/adyen-web/styles/adyen.css'],
   components: [
     {
       path: '~/components',
