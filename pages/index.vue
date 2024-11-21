@@ -42,65 +42,23 @@
         </nuxt-link>
       </li>
       <li class="integration-list-item">
-        <nuxt-link to="/preview?type=dotpay" class="integration-list-item-link">
-          <div class="title-container">
-            <p class="integration-list-item-title">Dotpay</p>
-          </div>
-        </nuxt-link>
-      </li>
-      <li class="integration-list-item">
-        <nuxt-link to="/preview?type=giropay" class="integration-list-item-link">
-          <div class="title-container">
-            <p class="integration-list-item-title">giropay</p>
-          </div>
-        </nuxt-link>
-      </li>
-      <li class="integration-list-item">
-        <nuxt-link to="/preview?type=sepadirectdebit" class="integration-list-item-link">
+        <nuxt-link to="/preview?type=sepa" class="integration-list-item-link">
           <div class="title-container">
             <p class="integration-list-item-title">SEPA Direct Debit</p>
           </div>
         </nuxt-link>
       </li>
       <li class="integration-list-item">
-        <nuxt-link to="/preview?type=directEbanking" class="integration-list-item-link">
+        <nuxt-link to="/preview?type=googlepay" class="integration-list-item-link">
           <div class="title-container">
-            <p class="integration-list-item-title">SOFORT</p>
+            <p class="integration-list-item-title">Google Pay</p>
           </div>
         </nuxt-link>
       </li>
       <li class="integration-list-item">
-        <nuxt-link to="/preview?type=ach" class="integration-list-item-link">
-          <div class="title-container">
-            <p class="integration-list-item-title">ACH</p>
-          </div>
-        </nuxt-link>
-      </li>
-      <li class="integration-list-item">
-        <nuxt-link to="/preview?type=alipay" class="integration-list-item-link">
-          <div class="title-container">
-            <p class="integration-list-item-title">Alipay</p>
-          </div>
-        </nuxt-link>
-      </li>
-      <li class="integration-list-item">
-        <nuxt-link to="/preview?type=klarna_paynow" class="integration-list-item-link">
+        <nuxt-link to="/preview?type=klarnapaynow" class="integration-list-item-link">
           <div class="title-container">
             <p class="integration-list-item-title">Klarna - Pay now</p>
-          </div>
-        </nuxt-link>
-      </li>
-      <li class="integration-list-item">
-        <nuxt-link to="/preview?type=klarna" class="integration-list-item-link">
-          <div class="title-container">
-            <p class="integration-list-item-title">Klarna - Pay later</p>
-          </div>
-        </nuxt-link>
-      </li>
-      <li class="integration-list-item">
-        <nuxt-link to="/preview?type=klarna_account" class="integration-list-item-link">
-          <div class="title-container">
-            <p class="integration-list-item-title">Klarna - Slice it</p>
           </div>
         </nuxt-link>
       </li>
