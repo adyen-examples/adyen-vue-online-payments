@@ -68,6 +68,12 @@ async function createAdyenCheckout(session, clientKey) {
       locale: "en_US",
       countryCode: 'NL',
       showPayButton: true,
+      // override Security Code label
+      translations: {
+        'en-US': {
+            'creditCard.securityCode.label': 'CVV/CVC'
+        }
+      },
       onPaymentCompleted: (result, component) => {
         console.info("onPaymentCompleted");
         console.info(result, component);
