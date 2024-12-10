@@ -10,6 +10,9 @@ export default defineNuxtConfig({
     adyenMerchantAccount: process.env.ADYEN_MERCHANT_ACCOUNT,
     adyenClientKey: process.env.ADYEN_CLIENT_KEY,
     adyenHmacKey: process.env.ADYEN_HMAC_KEY,
+    public: {
+      adyenClientKey: process.env.ADYEN_CLIENT_KEY
+    }
   },
   css: ['~/public/css/main.css', '@adyen/adyen-web/styles/adyen.css'],
   components: [

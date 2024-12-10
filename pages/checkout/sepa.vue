@@ -55,10 +55,10 @@ async function handleServerResponse(res, component) {
 }
 
 // Function to create AdyenCheckout instance
-async function createAdyenCheckout(session, clientKey) {
+async function createAdyenCheckout(session) {
   return AdyenCheckout(
     {
-      clientKey,
+      clientKey: useRuntimeConfig().public.adyenClientKey,
       session: session,
       environment: "test",
       amount: {
@@ -90,9 +90,9 @@ async function createAdyenCheckout(session, clientKey) {
 // Function to start checkout
 async function startCheckout() {
   try {
-    const { response, clientKey } = await sendPostRequest(`/api/sessions`);
+    const { response } = await sendPostRequest(`/api/sessions`);
 
-    const checkout = await createAdyenCheckout(response, clientKey);
+    const checkout = await createAdyenCheckout(response);
     const ideal = new SepaDirectDebit(checkout, {
       countryCode: 'NL',
       holderName: true
