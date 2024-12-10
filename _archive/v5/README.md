@@ -1,6 +1,6 @@
-# Adyen [online payment](https://docs.adyen.com/online-payments) integration demos
+# Sample app with Adyen Adyen Web 5.68.x.
 
-This folder contains the previous version of the sample application that uses Adyen Web 5.68.x.
+This folder contains the previous version of the sample application that uses **Adyen Web 5.68.x**.
 
 Check the root folder of the repository to use the latest Adyen Web 6.x
 
