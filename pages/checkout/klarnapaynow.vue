@@ -14,22 +14,11 @@
 
 import { ref, onMounted } from 'vue';
 import { AdyenCheckout, Klarna } from '@adyen/adyen-web';
+import { sendPostRequest } from '~/utils/api';
 
 // Reactive references
 const sessionId = ref('');
 const redirectResult = ref('');
-
-// Function to invoke server-side API
-async function sendPostRequest(url, data) {
-  const res = await fetch(url, {
-    method: "POST",
-    body: data ? JSON.stringify(data) : "",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  return await res.json();
-}
 
 // Function to handle the server response
 async function handleServerResponse(res, component) {
