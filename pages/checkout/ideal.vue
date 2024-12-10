@@ -21,7 +21,7 @@ const sessionId = ref('');
 const redirectResult = ref('');
 
 // Function to handle the server response
-async function handleServerResponse(res, component) {
+function handleServerResponse(res, component) {
   if (res.action) {
     component.handleAction(res.action);
   } else {
