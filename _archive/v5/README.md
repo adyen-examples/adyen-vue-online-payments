@@ -51,7 +51,7 @@ ADYEN_HMAC_KEY="your_hmac_key_here"
 npm run dev
 ```
 
-3. Visit [http://localhost:8080/v5](http://localhost:8080/v5) to select an integration type.
+3. Visit [http://localhost:8080](http://localhost:8080) to select an integration type.
 
 To try out integrations with test card numbers and payment method details, see [Test card numbers](https://docs.adyen.com/development-resources/test-cards/test-card-numbers).
 
