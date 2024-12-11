@@ -20,28 +20,6 @@ import { sendPostRequest } from '~/utils/api';
 const sessionId = ref('');
 const redirectResult = ref('');
 
-// Function to handle the server response
-function handleServerResponse(res, component) {
-  if (res.action) {
-    component.handleAction(res.action);
-  } else {
-    switch (res.resultCode) {
-      case "Authorised":
-        window.location.href = "/result/success";
-        break;
-      case "Pending":
-      case "Received":
-        window.location.href = "/result/pending";
-        break;
-      case "Refused":
-        window.location.href = "/result/failed";
-        break;
-      default:
-        window.location.href = "/result/error";
-        break;
-    }
-  }
-}
 
 // Function to create AdyenCheckout instance
 async function createAdyenCheckout(session) {
