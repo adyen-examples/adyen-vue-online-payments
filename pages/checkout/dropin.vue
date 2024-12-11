@@ -20,44 +20,55 @@ import { sendPostRequest } from '~/utils/api';
 const sessionId = ref('');
 const redirectResult = ref('');
 
-
 // Function to create AdyenCheckout instance
 async function createAdyenCheckout(session) {
-  return AdyenCheckout(
-    {
-      clientKey: useRuntimeConfig().public.adyenClientKey,
-      session: session,
-      environment: "test",
-      amount: {
-        value: 10000,
-        currency: 'EUR'
-      },
-      locale: "en-US",
-      countryCode: 'NL',
-      showPayButton: true,
-      // override Security Code label
-      translations: {
-        'en-US': {
-            'creditCard.securityCode.label': 'CVV/CVC'
-        }
-      },
-      onPaymentCompleted: (result, component) => {
-        console.info("onPaymentCompleted");
-        console.info(result, component);
-        handleServerResponse(result, component);
-      },
-      onPaymentFailed: (result, component) => {
-        console.info("onPaymentFailed");
-        console.info(result, component);
-        handleServerResponse(result, component);
-      },
-      onError: (error, component) => {
-        console.error("onError");
-        console.error(error.name, error.message, error.stack, component);
-        handleServerResponse(error, component);
-      },
-    }
-  );
+  return AdyenCheckout({
+    clientKey: useRuntimeConfig().public.adyenClientKey,
+    session: session,
+    environment: "test",
+    amount: {
+      value: 10000,
+      currency: 'EUR'
+    },
+    locale: "en-US",
+    countryCode: 'NL',
+    showPayButton: true,
+    translations: {
+      'en-US': {
+        'creditCard.securityCode.label': 'CVV/CVC'
+      }
+    },
+    onPaymentCompleted: (result, component) => {
+      console.info("onPaymentCompleted", result, component);
+      switch (result) {
+        case "Authorised":
+          window.location.href = "/result/success";
+          break;
+        case "Pending":
+        case "Received":
+          window.location.href = "/result/pending";
+          break;
+        default:
+          window.location.href = "/result/error";
+          break;
+      }
+    },
+    onPaymentFailed: (result, component) => {
+      console.info("onPaymentFailed", result, component);
+      switch (result.resultCode) {
+        case "Refused":
+          window.location.href = "/result/failed";
+          break;
+        default:
+          window.location.href = "/result/error";
+          break;
+      }
+    },
+    onError: (error, component) => {
+      console.error("onError", error.name, error.message, error.stack, component);
+      window.location.href = "/result/error";
+    },
+  });
 }
 
 // Function to start checkout
