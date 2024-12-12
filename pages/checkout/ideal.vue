@@ -69,6 +69,7 @@ function handleOnPaymentCompleted(resultCode) {
 // Function to handle payment failure redirects
 function handleOnPaymentFailed(resultCode) {
   switch (resultCode) {
+    case "Cancelled":
     case "Refused":
       window.location.href = "/result/failed";
       break;
