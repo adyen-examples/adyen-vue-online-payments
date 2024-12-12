@@ -40,35 +40,45 @@ async function createAdyenCheckout(session) {
     },
     onPaymentCompleted: (result, component) => {
       console.info("onPaymentCompleted", result, component);
-      switch (result) {
-        case "Authorised":
-          window.location.href = "/result/success";
-          break;
-        case "Pending":
-        case "Received":
-          window.location.href = "/result/pending";
-          break;
-        default:
-          window.location.href = "/result/error";
-          break;
-      }
+      handleOnPaymentCompleted(result.resultCode);
     },
     onPaymentFailed: (result, component) => {
       console.info("onPaymentFailed", result, component);
-      switch (result.resultCode) {
-        case "Refused":
-          window.location.href = "/result/failed";
-          break;
-        default:
-          window.location.href = "/result/error";
-          break;
-      }
+      handleOnPaymentFailed(result.resultCode);
     },
     onError: (error, component) => {
       console.error("onError", error.name, error.message, error.stack, component);
       window.location.href = "/result/error";
     },
   });
+}
+
+// Function to handle payment completion redirects
+function handleOnPaymentCompleted(resultCode) {
+  switch (resultCode) {
+    case "Authorised":
+      window.location.href = "/result/success";
+      break;
+    case "Pending":
+    case "Received":
+      window.location.href = "/result/pending";
+      break;
+    default:
+      window.location.href = "/result/error";
+      break;
+  }
+}
+
+// Function to handle payment failure redirects
+function handleOnPaymentFailed(resultCode) {
+  switch (resultCode) {
+    case "Refused":
+      window.location.href = "/result/failed";
+      break;
+    default:
+      window.location.href = "/result/error";
+      break;
+  }
 }
 
 // Function to start checkout

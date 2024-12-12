@@ -20,29 +20,6 @@ import { sendPostRequest } from '~/utils/api';
 const sessionId = ref('');
 const redirectResult = ref('');
 
-// Function to handle the server response
-function handleServerResponse(res, component) {
-  if (res.action) {
-    component.handleAction(res.action);
-  } else {
-    switch (res.resultCode) {
-      case "Authorised":
-        window.location.href = "/result/success";
-        break;
-      case "Pending":
-      case "Received":
-        window.location.href = "/result/pending";
-        break;
-      case "Refused":
-        window.location.href = "/result/failed";
-        break;
-      default:
-        window.location.href = "/result/error";
-        break;
-    }
-  }
-}
-
 // Function to create AdyenCheckout instance
 async function createAdyenCheckout(session) {
   return AdyenCheckout(
@@ -64,22 +41,47 @@ async function createAdyenCheckout(session) {
         }
       },
       onPaymentCompleted: (result, component) => {
-        console.info("onPaymentCompleted");
-        console.info(result, component);
-        handleServerResponse(result, component);
+        console.info("onPaymentCompleted", result, component);
+        handleOnPaymentCompleted(result.resultCode);
       },
       onPaymentFailed: (result, component) => {
-        console.info("onPaymentFailed");
-        console.info(result, component);
-        handleServerResponse(result, component);
-      },
+        console.info("onPaymentFailed", result, component);
+      handleOnPaymentFailed(result.resultCode);
+    },
       onError: (error, component) => {
-        console.error("onError");
-        console.error(error.name, error.message, error.stack, component);
-        handleServerResponse(error, component);
+        console.error("onError", error.name, error.message, error.stack, component);
+        window.location.href = "/result/error";
       },
     }
   );
+}
+
+// Function to handle payment completion redirects
+function handleOnPaymentCompleted(resultCode) {
+  switch (resultCode) {
+    case "Authorised":
+      window.location.href = "/result/success";
+      break;
+    case "Pending":
+    case "Received":
+      window.location.href = "/result/pending";
+      break;
+    default:
+      window.location.href = "/result/error";
+      break;
+  }
+}
+
+// Function to handle payment failure redirects
+function handleOnPaymentFailed(resultCode) {
+  switch (resultCode) {
+    case "Refused":
+      window.location.href = "/result/failed";
+      break;
+    default:
+      window.location.href = "/result/error";
+      break;
+  }
 }
 
 // Function to start checkout
