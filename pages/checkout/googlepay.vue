@@ -14,7 +14,6 @@
 
 import { ref, onMounted } from 'vue';
 import { AdyenCheckout, GooglePay } from '@adyen/adyen-web';
-import { sendPostRequest } from '~/utils/api';
 
 // Reactive references
 const sessionId = ref('');
@@ -81,15 +80,21 @@ function handleOnPaymentFailed(resultCode) {
 
 // Function to start checkout
 async function startCheckout() {
+  
   try {
-    const { response } = await sendPostRequest(`/api/sessions`);
+    const { response } = await fetch('/api/sessions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    }).then(res => res.json());
 
     const checkout = await createAdyenCheckout(response);
     const googlepay = new GooglePay(checkout, { 
       emailRequired: true,
       billingAddressRequired: true,
       shippingAddressRequired: true,
-     })
+    })
     .mount('#component-container');
 
   } catch (error) {
