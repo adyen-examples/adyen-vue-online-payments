@@ -35,7 +35,7 @@ export default defineEventHandler(async (event) => {
       returnUrl: `${returnUrl}`,
     });
 
-    return { response };
+    return { response, clientKey: config.adyenClientKey };
   } catch (err: any) {
     console.error(`Error: ${err.message}, error code: ${err.errorCode}`);
     throw createError({ statusCode: err.statusCode, message: err.message });

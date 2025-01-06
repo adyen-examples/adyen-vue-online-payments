@@ -10,11 +10,8 @@ export default defineNuxtConfig({
     adyenMerchantAccount: process.env.ADYEN_MERCHANT_ACCOUNT,
     adyenClientKey: process.env.ADYEN_CLIENT_KEY,
     adyenHmacKey: process.env.ADYEN_HMAC_KEY,
-    public: {
-      adyenClientKey: process.env.ADYEN_CLIENT_KEY
-    }
   },
-  css: ['~/public/css/main.css', '@adyen/adyen-web/styles/adyen.css'],
+  css: ['~/public/css/main.css', '@adyen/adyen-web/dist/adyen.css'],
   components: [
     {
       path: '~/components',
@@ -22,6 +19,6 @@ export default defineNuxtConfig({
     },
   ],
   compatibilityDate: '2024-04-03',
-  devtools: { enabled: false },
+  devtools: { enabled: true },
   telemetry: false
 })

@@ -1,30 +1,17 @@
-# Adyen [online payment](https://docs.adyen.com/online-payments) integration demos
+# Sample app with Adyen Adyen Web 5.68.x.
 
-Checkout sample application using Adyen Drop-in v6 (see [folder /_archive/v5](./_archive/v5) to access the previous version using Adyen Drop-in v5).
+This folder contains the previous version of the sample application that uses **Adyen Web 5.68.x**.
 
-## Run this integration in seconds using [Gitpod](https://gitpod.io/)
-
-* Open your [Adyen Test Account](https://ca-test.adyen.com/ca/ca/overview/default.shtml) and create a set of [API keys](https://docs.adyen.com/user-management/how-to-get-the-api-key).
-* Go to [gitpod account variables](https://gitpod.io/variables).
-* Set the `ADYEN_API_KEY`, `ADYEN_CLIENT_KEY`, `ADYEN_HMAC_KEY` and `ADYEN_MERCHANT_ACCOUNT variables`.
-* Click the button below!
-
-_NOTE: To allow the Adyen Drop-In and Components to load, you have to add `https://*.gitpod.io` as allowed origin for your chosen set of [API Credentials](https://ca-test.adyen.com/ca/ca/config/api_credentials_new.shtml)_
-
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/adyen-examples/adyen-vue-online-payments)  
-&nbsp;[First time with Gitpod?](https://github.com/adyen-examples/.github/blob/main/pages/gitpod-get-started.md)
+Check the root folder of the repository to use the latest Adyen Web 6.x
 
 ## Details
-
-This repository showcases a PCI-compliant integration of the [Sessions Flow](https://docs.adyen.com/online-payments/build-your-integration/additional-use-cases/), the default integration that we recommend for merchants. Explore this simplified e-commerce demo to discover the code, libraries and configuration you need to enable various payment options in your checkout experience. It is implemented in Typescript (5.0) using Nuxt v3 and Vue 3+.
-
-![Card checkout demo](public/images/cardcheckout.gif)
 
 The demo leverages Adyen's API Library for Node.js ([GitHub](https://github.com/Adyen/adyen-node-api-library) | [Docs](https://docs.adyen.com/development-resources/libraries#javascript)).
 
 ## Requirements
 
-Node.js 20+
+Node.js 18+
+Adyen Web 5.68.x
 
 ## Installation
 
@@ -34,9 +21,10 @@ Node.js 20+
 git clone https://github.com/adyen-examples/adyen-vue-online-payments.git
 ```
 
-2. Navigate to the root directory and install dependencies:
+2. Navigate to the `v5` directory and install dependencies:
 
 ```
+cd v5
 npm install
 ```
 
@@ -63,7 +51,7 @@ ADYEN_HMAC_KEY="your_hmac_key_here"
 npm run dev
 ```
 
-3. Visit [http://localhost:8080/](http://localhost:8080/) to select an integration type.
+3. Visit [http://localhost:8080](http://localhost:8080) to select an integration type.
 
 To try out integrations with test card numbers and payment method details, see [Test card numbers](https://docs.adyen.com/development-resources/test-cards/test-card-numbers).
 
