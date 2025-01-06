@@ -91,9 +91,11 @@ async function startCheckout() {
 
     const checkout = await createAdyenCheckout(response);
     const klarna = new Klarna(checkout, { 
+      // Types: 'klarna_paynow' (pay now), 'klarna' (pay later), 'klarna_account' (pay over time)
+      // See: https://docs.adyen.com/payment-methods/klarna/web-component/#component-configuration
       type: "klarna_paynow",
-      useKlarnaWidget: false,
-     })
+        useKlarnaWidget: false,
+    })
     .mount('#component-container');
 
   } catch (error) {
