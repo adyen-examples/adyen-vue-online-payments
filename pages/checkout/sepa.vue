@@ -90,7 +90,7 @@ async function startCheckout() {
     }).then(res => res.json());
 
     const checkout = await createAdyenCheckout(response);
-    const ideal = new SepaDirectDebit(checkout, {
+    const sepa = new SepaDirectDebit(checkout, {
       countryCode: 'NL',
       holderName: true
       })
