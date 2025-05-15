@@ -4,17 +4,4 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    ignore:
-      - dependency-name: "*"
-        update-types: ["version-update:semver-patch", "version-update:semver-minor"]
-    ignore-paths:
-      - "_archive/**"
-  - package-ecosystem: "npm"
-    directory: "/"
-    schedule:
-      interval: "daily"
-    allow:
-      - dependency-name: "@adyen/api-library"
-    ignore-paths:
-      - "_archive/**"
-      
+    rebase-strategy: "disabled"
