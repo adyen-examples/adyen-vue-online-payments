@@ -1,0 +1,23 @@
+{
+  "name": "Adyen Vue Online Payments",
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+
+  "postCreateCommand": "bash .devcontainer/setup.sh",
+  "customizations": {
+    "vscode": {
+        "extensions": [
+            "Vue.volar",
+            "Vue.vscode-typescript-vue-plugin",
+            "dbaeumer.vscode-eslint",
+            "esbenp.prettier-vscode"
+        ]
+    }
+  },
+  "portsAttributes": {
+    "3000": {
+      "label": "Vue App",
+      "onAutoForward": "notify"
+    }
+  },
+  "forwardPorts": [3000]
+}

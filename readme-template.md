@@ -1,27 +1,27 @@
-# Adyen Vue [Online Payment](https://docs.adyen.com/online-payments) integration demos
+# Adyen Golang [Online Payment](httpshttps://docs.adyen.com/online-payments) integration demos
 
-[![Vue Build](https://github.com/adyen-examples/adyen-vue-online-payments/actions/workflows/build.yml/badge.svg)](https://github.com/adyen-examples/adyen-vue-online-payments/actions/workflows/build.yml) 
-[![E2E (Playwright)](https://github.com/adyen-examples/adyen-vue-online-payments/actions/workflows/e2e.yml/badge.svg)](https://github.com/adyen-examples/adyen-vue-online-payments/actions/workflows/e2e.yml)
+[![Go Build](https://github.com/adyen-examples/adyen-golang-online-payments/actions/workflows/build.yml/badge.svg)](https://github.com/adyen-examples/adyen-golang-online-payments/actions/workflows/build.yml) 
+[![E2E (Playwright)](https://github.com/adyen-examples/adyen-golang-online-payments/actions/workflows/e2e.yml/badge.svg)](https://github.com/adyen-examples/adyen-golang-online-payments/actions/workflows/e2e.yml)
 
 Checkout sample application using Adyen Drop-in v6 (see [folder /_archive/v5](./_archive/v5) to access the previous version using Adyen Drop-in v5).
 
 ## Details
 
-This repository showcases a PCI-compliant integration of the [Sessions Flow](https://docs.adyen.com/online-payments/build-your-integration/additional-use-cases/), the default integration that we recommend for merchants. Explore this simplified e-commerce demo to discover the code, libraries and configuration you need to enable various payment options in your checkout experience. It is implemented in Typescript (5.0) using Nuxt v3 and Vue 3+.
+This repository showcases a PCI-compliant integration of the [Sessions Flow](https://docs.adyen.com/online-payments/build-your-integration/additional-use-cases/), the default integration that we recommend for merchants. Explore this simplified e-commerce demo to discover the code, libraries and configuration you need to enable various payment options in your checkout experience.
 
-![Card checkout demo](public/images/cardcheckout.gif)
+![Card checkout demo](static/images/cardcheckout.gif)
 
-The demo leverages Adyen's API Library for Node.js ([GitHub](https://github.com/Adyen/adyen-node-api-library) | [Docs](https://docs.adyen.com/development-resources/libraries#javascript)).
+The demo leverages Adyen's API Library for Golang [GitHub](https://github.com/Adyen/adyen-go-api-library) | [Docs](https://docs.adyen.com/development-resources/libraries?tab=go_4_5#go).
 
 ## Requirements
 
-Node.js >=18.0.0 <=20.0.0
+- Golang 1.19+
 
 ## Quick Start with GitHub Codespaces
 
 This repository is configured to work with [GitHub Codespaces](https://github.com/features/codespaces). Click the badge below to launch a Codespace with all dependencies pre-installed.
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new/adyen-examples/adyen-vue-online-payments?ref=main&devcontainer_path=.devcontainer%2Fdevcontainer.json)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new/adyen-examples/adyen-golang-online-payments?ref=main&devcontainer_path=.devcontainer%2Fdevcontainer.json)
 
 For detailed setup instructions, see the [GitHub Codespaces Instructions](https://github.com/adyen-examples/.github/blob/main/pages/codespaces-instructions.md).
 
@@ -30,18 +30,12 @@ For detailed setup instructions, see the [GitHub Codespaces Instructions](https:
 1. Clone this repo:
 
 ```
-git clone https://github.com/adyen-examples/adyen-vue-online-payments.git
+git clone https://github.com/adyen-examples/adyen-golang-online-payments.git
 ```
 
-2. Navigate to the root directory and install dependencies:
+2. Set the following environment variables in your terminal. You can also create a `./.env` file and add them there.
 
-```
-npm install
-```
-
-3. Set the following environment variables in your terminal. You can also create a `./.env` file and add them there.
-
-  - PORT (default 3000)
+  - PORT (default 8080)
   - [API key](https://docs.adyen.com/user-management/how-to-get-the-api-key)
   - [Client Key](https://docs.adyen.com/user-management/client-side-authentication)
   - [Merchant Account](https://docs.adyen.com/account/account-structure)
@@ -54,16 +48,16 @@ export ADYEN_MERCHANT_ACCOUNT="your_adyen_merchant_account"
 export ADYEN_HMAC_KEY="your_adyen_hmac_key"
 ```
 
-4. Configure allowed origins (CORS)
-- It is required to specify the domain or URL of the web applications that will make requests to Adyen. In the Customer Area, add `http://localhost:3000` in the list of Allowed Origins associated with the Client Key.
+3. Configure allowed origins (CORS)
+- It is required to specify the domain or URL of the web applications that will make requests to Adyen. In the Customer Area, add `http://localhost:8080` in the list of Allowed Origins associated with the Client Key.
 
-5. Start the server:
+4. Start the server:
 
 ```
-npm run dev
+go run main.go
 ```
 
-6. Visit [http://localhost:3000/](http://localhost:3000/) and select an integration type.
+5. Visit [http://localhost:8080/](http://localhost:8080/) and select an integration type.
 
 To try out integrations with test card numbers and payment method details, see [Test card numbers](https://docs.adyen.com/development-resources/test-cards/test-card-numbers).
 
@@ -98,7 +92,7 @@ To make sure that the Adyen platform can reach your application, we have written
 
 We commit all our new features directly into our GitHub repository. Feel free to request or suggest new features or code changes yourself as well!
 
-Find out more in our [Contributing](https://github.com/adyen-examples/.github/blob/main/CONTRIBUTING.md) guidelines.
+Find out more in our [Contributing](httpshttps://github.com/adyen-examples/.github/blob/main/CONTRIBUTING.md) guidelines.
 
 ## License
 
