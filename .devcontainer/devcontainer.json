@@ -2,7 +2,7 @@
   "name": "Adyen Vue Online Payments",
   "image": "mcr.microsoft.com/devcontainers/universal:2",
 
-  "postCreateCommand": "bash .devcontainer/setup.sh",
+  "postAttachCommand": "bash .devcontainer/setup.sh",
   "customizations": {
     "vscode": {
         "extensions": [
