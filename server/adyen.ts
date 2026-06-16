@@ -7,7 +7,7 @@ export async function createAdyenClient() {
 
         var config = new Config();
         config.apiKey = process.env.ADYEN_API_KEY;
-        config.applicationName = "adyen-vue-online-payments checkout-example adyen-web/6.6.0";
+        config.applicationName = "[adyen-vue-online-payments checkout-example adyen-web/6.6.0]";
 
         const client = new Client({ config });
         client.setEnvironment('TEST'); // Use 'LIVE' for production
