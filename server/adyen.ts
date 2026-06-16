@@ -1,9 +1,4 @@
 import adyen from "@adyen/api-library";
-import { readFileSync } from "fs";
-import { resolve } from "path";
-
-const packageJson = JSON.parse(readFileSync(resolve("package.json"), "utf-8"));
-const adyenWebVersion = packageJson.dependencies["@adyen/adyen-web"].replace(/^\^/, "");
 
 export async function createAdyenClient() {
 
@@ -12,7 +7,7 @@ export async function createAdyenClient() {
 
         var config = new Config();
         config.apiKey = process.env.ADYEN_API_KEY;
-        config.applicationName = `adyen-vue-online-payments checkout-example adyen-web/${adyenWebVersion}`;
+        config.applicationName = "adyen-vue-online-payments checkout-example adyen-web/6.6.0";
 
         const client = new Client({ config });
         client.setEnvironment('TEST'); // Use 'LIVE' for production
